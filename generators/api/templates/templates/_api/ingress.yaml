@@ -1,0 +1,23 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}
+  labels:
+    app: {{ template "<%= projectName %>.name" . }}-<%= apiName %>
+    chart: {{ template "<%= projectName %>.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+spec:
+  rules:
+<% if(apiHost) { -%>
+   -  host: "<%= apiHost %>"
+      http:
+<% } else { -%>
+    - http:
+<% } -%>
+        paths:
+          - path: <%= apiPath %>
+            backend:
+              serviceName: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+              servicePort: http

@@ -1,0 +1,14 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}-<%= hookApi %>-<%= hookType %>
+  labels:
+    release: {{.Release.Name }}
+    heritage: {{.Release.Service }}
+    chart: {{ template "<%= projectName %>.chart" . }}
+  annotations:
+    "helm.sh/hook": <%= hookType %>
+    "helm.sh/hook-weight": "<%= hookWeight - 1 %>"
+    "helm.sh/hook-delete-policy": hook-succeeded
+data:
+{{ (.Files.Glob "data/<%= hookFileGlob %>").AsConfig | indent 4 }}

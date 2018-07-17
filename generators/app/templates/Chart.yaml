@@ -1,0 +1,15 @@
+apiVersion: v1
+name: <%= projectName %>
+version: 0.0.1
+description: <%= projectDescription %>
+<% if(projectAppVersion) { -%>
+appVersion: <%= projectAppVersion %>
+<% } -%>
+keywords:
+<%= projectKeywords.map(keyword => `  - ${keyword}\n`).join('') -%>
+maintainers:
+  - name: <%= authorName %>
+    email: <%= authorEmail %>
+<% if(projectIcon) { -%>
+icon: <%= projectIcon %>
+<% } -%>

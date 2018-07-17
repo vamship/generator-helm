@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+  labels:
+    app: {{ template "<%= projectName %>.name" . }}
+    component: <%= apiName %>
+    chart: {{ template "<%= projectName %>.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "<%= projectName %>.name" . }}
+    component: <%= apiName %>
+    release: {{ .Release.Name }}

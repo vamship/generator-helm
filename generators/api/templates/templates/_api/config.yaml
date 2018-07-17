@@ -1,0 +1,11 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+  labels:
+    release: {{.Release.Name }}
+    heritage: {{.Release.Service }}
+    chart: {{ template "<%= projectName %>.chart" . }}
+data:
+  config: |-
+{{ .Files.Get "data/<%= apiName %>-config.json" | indent 4 }}

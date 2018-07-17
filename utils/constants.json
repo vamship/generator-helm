@@ -1,0 +1,7 @@
+{
+    "SEPARATOR":
+        "--------------------------------------------------------------------------------",
+    "GENERATOR_NAME": "@vamship/helm",
+    "SUB_GEN_API": "api",
+    "SUB_GEN_HOOK": "hook"
+}

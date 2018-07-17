@@ -1,0 +1,41 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: "{{.Release.Name}}"
+  labels:
+    app: {{ template "<%= projectName %>.name" . }}
+    component: <%= hookApi %>
+    release: {{.Release.Name }}
+    chart: {{ template "<%= projectName %>.chart" . }}
+    heritage: {{.Release.Service }}
+  annotations:
+    "helm.sh/hook": <%= hookType %>
+    "helm.sh/hook-weight": "<%= hookWeight %>"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{.Release.Name}}"
+      labels:
+        app: {{ template "<%= projectName %>.name" . }}
+        component: <%= hookApi %>
+        release: {{.Release.Name }}
+        chart: {{ template "<%= projectName %>.chart" . }}
+        heritage: {{.Release.Service }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: <%= hookApi %>-<%= hookType %>
+          image: {{ template "<%= projectName %>.<%= hookApi %>.<%= hookType %>.image" . }}
+          imagePullPolicy: {{ .Values.image.defaultPullPolicy }}
+<% if(hookFileGlob) { -%>
+          volumeMounts:
+            - name: <%= hookType %>-volume
+              mountPath: /data
+<% } -%>
+          command:
+<%= hookCommand.map(token => `            - ${token}\n`).join('') -%>
+      volumes:
+        - name: <%= hookType %>-volume
+          configMap:
+            name: {{ template "<%= projectName %>.fullname" . }}-<%= hookApi %>-<%= hookType %>

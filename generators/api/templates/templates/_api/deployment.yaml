@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+  labels:
+    app: {{ template "<%= projectName %>.name" . }}
+    component: <%= apiName %>
+    release: {{ .Release.Name }}
+    chart: {{ template "<%= projectName %>.chart" . }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "<%= projectName %>.name" . }}
+      component: <%= apiName %>
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "<%= projectName %>.name" . }}
+        component: <%= apiName %>
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: appconfig
+          configMap:
+            name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+      containers:
+        - name: api
+          image: {{ template "<%= projectName %>.<%= apiName %>.image" . }}
+          imagePullPolicy: {{ .Values.image.defaultPullPolicy }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+          volumeMounts:
+            - name: appconfig
+              mountPath: /etc/<%= apiName %>/config
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

@@ -1,0 +1,4 @@
+Success!
+
+The chart {{ template "<%= projectName %>.chart" . }} ({{ .Release.Name }}) has been
+successfully installed.
