@@ -1,6 +1,6 @@
 {
     "name": "@vamship/generator-helm",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Yeoman generator for kubernetes helm charts",
     "homepage": "",
     "author": {
@@ -9,7 +9,8 @@
         "url": ""
     },
     "files": [
-        "generators"
+        "generators",
+        "utils"
     ],
     "main": "generators/index.js",
     "keywords": [
