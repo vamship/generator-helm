@@ -72,6 +72,30 @@ module.exports = class extends Generator {
                     },
                     {
                         type: 'input',
+                        name: 'apiIngressClass',
+                        message: 'Ingress class (leave empty if none)?',
+                    },
+                    {
+                        type: 'confirm',
+                        name: 'apiTlsEnabled',
+                        message: 'Enable TLS access?',
+                        default: true
+                    },
+                    {
+                        type: 'input',
+                        name: 'apiTlsHost',
+                        message: 'Hostname for TLS access?',
+                        default: (answers) => answers.apiHost,
+                        when: (answers) => answers.apiTlsEnabled
+                    },
+                    {
+                        type: 'input',
+                        name: 'apiTlsSecret',
+                        message: 'Kubernetes secret for TLS (leave empty if none)?',
+                        when: (answers) => answers.apiTlsEnabled
+                    },
+                    {
+                        type: 'input',
                         name: 'apiImage',
                         message: 'Api image?',
                         validate: (input, answers) => {

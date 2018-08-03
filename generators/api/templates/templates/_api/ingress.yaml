@@ -8,7 +8,20 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
+<% if(apiIngressClass) { -%>
+    kubernetes.io/ingress.class: "<%= apiIngressClass %>"
+<% } -%>
 spec:
+<% if(apiTlsEnabled) { -%>
+  tls:
+<% if(apiTlsHost) { -%>
+    - hosts:
+      - <%= apiTlsHost %>
+<% } -%>
+<% if(apiTlsSecret) { -%>
+      secretName: <%= apiTlsSecret %>
+<%} -%>
+<%} -%>
   rules:
 <% if(apiHost) { -%>
    -  host: "<%= apiHost %>"
