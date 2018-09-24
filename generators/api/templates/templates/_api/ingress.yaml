@@ -14,9 +14,11 @@ metadata:
 spec:
 <% if(apiTlsEnabled) { -%>
   tls:
-<% if(apiTlsHost) { -%>
     - hosts:
+<% if(apiTlsHost) { -%>
       - <%= apiTlsHost %>
+<% } else { -%>
+      - {{required "Value api.hostname is required" .Values.api.hostname }}
 <% } -%>
 <% if(apiTlsSecret) { -%>
       secretName: <%= apiTlsSecret %>
@@ -25,10 +27,10 @@ spec:
   rules:
 <% if(apiHost) { -%>
    -  host: "<%= apiHost %>"
-      http:
 <% } else { -%>
-    - http:
+    -  host: {{required "Value api.hostname is required" .Values.api.hostname }}
 <% } -%>
+      http:
         paths:
           - path: <%= apiPath %>
             backend:
