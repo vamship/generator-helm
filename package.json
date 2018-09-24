@@ -20,26 +20,26 @@
         "yeoman-generator"
     ],
     "devDependencies": {
-        "eslint": "^4.19.1",
-        "eslint-config-prettier": "^2.9.0",
-        "eslint-config-xo": "^0.20.1",
-        "eslint-plugin-prettier": "^2.6.0",
-        "husky": "^0.14.3",
-        "jest": "^22.0.6",
-        "lint-staged": "^6.1.1",
+        "eslint": "^5.6.0",
+        "eslint-config-prettier": "^3.1.0",
+        "eslint-config-xo": "^0.25.0",
+        "eslint-plugin-prettier": "^2.6.2",
+        "husky": "^1.0.0-rc.15",
+        "jest": "^23.6.0",
+        "lint-staged": "^7.3.0",
         "nsp": "^3.2.1",
-        "prettier": "^1.11.1",
-        "yeoman-assert": "^3.1.0",
-        "yeoman-test": "^1.7.0"
+        "prettier": "^1.14.3",
+        "yeoman-assert": "^3.1.1",
+        "yeoman-test": "^1.9.1"
     },
     "engines": {
         "npm": ">= 4.0.0"
     },
     "dependencies": {
-        "chalk": "^2.1.0",
+        "chalk": "^2.4.1",
         "globby": "^8.0.1",
-        "yeoman-generator": "^2.0.1",
-        "yosay": "^2.0.1"
+        "yeoman-generator": "^3.1.1",
+        "yosay": "^2.0.2"
     },
     "jest": {
         "testEnvironment": "node"
