@@ -7,13 +7,13 @@ First, install [Yeoman](http://yeoman.io) and generator-helm using [npm](https:/
 
 ```bash
 npm install -g yo
-npm install -g generator-helm
+npm install -g @vamship/generator-helm
 ```
 
 Then generate your new project:
 
 ```bash
-yo helm
+yo @vamship/helm
 ```
 
 ## Getting To Know Yeoman
