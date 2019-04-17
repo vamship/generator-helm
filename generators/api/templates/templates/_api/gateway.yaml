@@ -1,0 +1,40 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+  labels:
+    app: {{ template "<%= projectName %>.name" . }}
+    component: <%= apiName %>
+    chart: {{ template "<%= projectName %>.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    istio: ingressgateway # use istio default ingress gateway
+  servers:
+<% if(apiTlsEnabled) { -%>
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - {{required "Value api.hostname is required" .Values.api.hostname }}
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - {{required "Value api.hostname is required" .Values.api.hostname }}
+    tls:
+      mode: SIMPLE
+      credentialName: {{required "Value api.tlsCredentials is required" .Values.api.tlsCredentials}}
+<% } else { -%>
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - {{required "Value api.hostname is required" .Values.api.hostname }}
+<% } -%>

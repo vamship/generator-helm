@@ -48,18 +48,6 @@ module.exports = class extends Generator {
                     },
                     {
                         type: 'input',
-                        name: 'apiHost',
-                        message: 'Api host (leave empty if no host)?',
-                        validate: (input, answers) => {
-                            const pattern = /^([a-zA-Z0-9][a-zA-Z0-9-_]*\.)*[a-zA-Z0-9]*[a-zA-Z0-9-_]*[[a-zA-Z0-9]+$/;
-                            if (input.length === 0 || input.match(pattern)) {
-                                return true;
-                            }
-                            return 'Invalid api hostname. Must be a valid DNS subdomain, or must be empty';
-                        }
-                    },
-                    {
-                        type: 'input',
                         name: 'apiPath',
                         message: 'Api path?',
                         filter: (answer) => {
@@ -72,27 +60,21 @@ module.exports = class extends Generator {
                     },
                     {
                         type: 'input',
-                        name: 'apiIngressClass',
-                        message: 'Ingress class (leave empty if none)?',
+                        name: 'apiPort',
+                        message: 'Port number on which API listens?',
+                        validate: (input) => {
+                            if (typeof input === 'number') {
+                                return true;
+                            }
+                            return 'Please provide a valid port number';
+                        },
+                        default: 3000
                     },
                     {
                         type: 'confirm',
                         name: 'apiTlsEnabled',
                         message: 'Enable TLS access?',
                         default: true
-                    },
-                    {
-                        type: 'input',
-                        name: 'apiTlsHost',
-                        message: 'Hostname for TLS access?',
-                        default: (answers) => answers.apiHost,
-                        when: (answers) => answers.apiTlsEnabled
-                    },
-                    {
-                        type: 'input',
-                        name: 'apiTlsSecret',
-                        message: 'Kubernetes secret for TLS (leave empty if none)?',
-                        when: (answers) => answers.apiTlsEnabled
                     },
                     {
                         type: 'input',
@@ -123,7 +105,8 @@ module.exports = class extends Generator {
             'templates/_api/config.yaml',
             'templates/_api/deployment.yaml',
             'templates/_api/service.yaml',
-            'templates/_api/ingress.yaml'
+            'templates/_api/gateway.yaml',
+            'templates/_api/virtual-service.yaml'
         ].forEach((srcFile) => {
             const destFile = srcFile
                 .replace(/^_/, '.')
