@@ -62,8 +62,9 @@ module.exports = class extends Generator {
                         type: 'input',
                         name: 'apiPort',
                         message: 'Port number on which API listens?',
+                        filter: (answer) => parseInt(answer),
                         validate: (input) => {
-                            if (typeof input === 'number') {
+                            if (!isNaN(parseInt(input))) {
                                 return true;
                             }
                             return 'Please provide a valid port number';
