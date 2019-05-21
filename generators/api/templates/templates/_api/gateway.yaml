@@ -18,7 +18,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - {{required "Value api.hostname is required" .Values.api.hostname }}
+    - {{ required "Value api.hostname is required" .Values.api.hostname }}
     tls:
       httpsRedirect: true
   - port:
@@ -26,15 +26,15 @@ spec:
       name: https
       protocol: HTTPS
     hosts:
-    - {{required "Value api.hostname is required" .Values.api.hostname }}
+    - {{ required "Value api.hostname is required" .Values.api.hostname }}
     tls:
       mode: SIMPLE
-      credentialName: {{required "Value api.tlsCredentials is required" .Values.api.tlsCredentials}}
+      credentialName: {{ required "Value api.tlsCredentials is required" .Values.api.tlsCredentials }}
 <% } else { -%>
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - {{required "Value api.hostname is required" .Values.api.hostname }}
+    - {{ required "Value api.hostname is required" .Values.api.hostname }}
 <% } -%>
