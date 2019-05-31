@@ -1,0 +1,21 @@
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: "Policy"
+metadata:
+  name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+  labels:
+    app: {{ template "<%= projectName %>.name" . }}
+    component: <%= apiName %>
+    chart: {{ template "<%= projectName %>.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  targets:
+  - name: {{ template "<%= projectName %>.fullname" . }}-<%= apiName %>
+  origins:
+  - jwt:
+      issuer: {{ required "Value api.jwt.issuer is required" .Values.api.jwt.issuer }}
+      jwksUri: {{ required "Value api.jwt.jwksUri is required" .Values.api.jwt.jwksUri }}
+      trigger_rules:
+      - excluded_paths:
+        - prefix: /external/health/
+  principalBinding: USE_ORIGIN

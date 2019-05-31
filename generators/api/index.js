@@ -51,7 +51,7 @@ module.exports = class extends Generator {
                         name: 'apiRoutePrefix',
                         message: 'Api route prefix?',
                         filter: (answer) => {
-                            if(answer.indexOf('/') !== 0) {
+                            if (answer.indexOf('/') !== 0) {
                                 return `/${answer}`;
                             }
                             return answer;
@@ -73,9 +73,16 @@ module.exports = class extends Generator {
                     },
                     {
                         type: 'confirm',
-                        name: 'apiTlsEnabled',
-                        message: 'Enable TLS access?',
+                        name: 'apiJwtEnabled',
+                        message: 'Enable JWT authentication?',
                         default: true
+                    },
+                    {
+                        type: 'input',
+                        name: 'apiJwtIssuer',
+                        message: 'JWT issuer?',
+                        default: 'ADI',
+                        when: (answers) => !!answers.apiJwtEnabled
                     },
                     {
                         type: 'input',
@@ -101,13 +108,17 @@ module.exports = class extends Generator {
      * Creates project files
      */
     createProjectFiles() {
-        const { apiName } = this.props;
-        [
+        const { apiName, apiJwtEnabled } = this.props;
+        const files = [
             'templates/_api/config.yaml',
             'templates/_api/deployment.yaml',
             'templates/_api/service.yaml',
             'templates/_api/virtual-service.yaml'
-        ].forEach((srcFile) => {
+        ];
+        if (apiJwtEnabled) {
+            files.push('templates/_api/policy.yaml');
+        }
+        files.forEach((srcFile) => {
             const destFile = srcFile
                 .replace(/^_/, '.')
                 .replace(/\/_api\//, `/${apiName}/`);
@@ -142,6 +153,45 @@ Container image for ${apiName}
         this.fs.copy(helperFile, helperFile, {
             process: (content) => {
                 return Buffer.concat([content, helperTemplate]);
+            }
+        });
+    }
+
+    /**
+     * Update the values.yaml file with the api value defaults
+     */
+    updateValues() {
+        const { apiRoutePrefix, apiJwtEnabled, apiJwtIssuer } = this.props;
+        const valuesFile = this.destinationPath('values.yaml');
+        let values = [
+            `api:`,
+            `  hosts:`,
+            `    - '"*"'`,
+            `  routePrefix: ${apiRoutePrefix}`
+        ];
+        if (apiJwtEnabled) {
+            values = values.concat([`  jwt:`, `    issuer: ${apiJwtIssuer}`]);
+        }
+        values = values.concat([
+            `  image:`,
+            `      defaultPullPolicy: IfNotPresent`,
+            `  replicaCount: 1`,
+            `  resources: {}`,
+            `    # We usually recommend not to specify default resources and to leave this as a conscious`,
+            `    # choice for the user. This also increases chances charts run on environments with little`,
+            `    # resources, such as Minikube. If you do want to specify resources, uncomment the following`,
+            `    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.`,
+            `    # limits:`,
+            `    #  cpu: 100m`,
+            `    #  memory: 128Mi`,
+            `    # requests:`,
+            `    #  cpu: 100m`,
+            `    #  memory: 128Mi`
+        ]);
+        const valuesTemplate = Buffer.from(values.join('\n'));
+        this.fs.copy(valuesFile, valuesFile, {
+            process: (content) => {
+                return Buffer.concat([content, valuesTemplate]);
             }
         });
     }
