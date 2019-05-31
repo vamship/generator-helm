@@ -30,3 +30,18 @@ Create chart name and version as used by the chart label.
 {{- define "<%= projectName %>.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Performs error checking on the host list.
+*/}}
+{{- define "<%= projectName %>.validateHosts" -}}
+{{- if not (.Values.hosts | default "" | len) -}}
+{{- fail "No hosts specified" -}}
+{{- else -}}
+{{- range .Values.hosts -}}
+{{- if not . -}}
+{{- fail "One or more hosts have invalid values" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}

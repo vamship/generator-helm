@@ -48,8 +48,8 @@ module.exports = class extends Generator {
                     },
                     {
                         type: 'input',
-                        name: 'apiPath',
-                        message: 'Api path?',
+                        name: 'apiRoutePrefix',
+                        message: 'Api route prefix?',
                         filter: (answer) => {
                             if(answer.indexOf('/') !== 0) {
                                 return `/${answer}`;
@@ -106,7 +106,6 @@ module.exports = class extends Generator {
             'templates/_api/config.yaml',
             'templates/_api/deployment.yaml',
             'templates/_api/service.yaml',
-            'templates/_api/gateway.yaml',
             'templates/_api/virtual-service.yaml'
         ].forEach((srcFile) => {
             const destFile = srcFile

@@ -9,7 +9,7 @@ metadata:
     chart: {{ template "<%= projectName %>.chart" . }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.api.replicaCount }}
   selector:
     matchLabels:
       app: {{ template "<%= projectName %>.name" . }}
@@ -29,7 +29,7 @@ spec:
       containers:
         - name: api
           image: {{ template "<%= projectName %>.<%= apiName %>.image" . }}
-          imagePullPolicy: {{ .Values.image.defaultPullPolicy }}
+          imagePullPolicy: {{ .Values.api.image.defaultPullPolicy }}
           ports:
             - name: http
               containerPort: <%= apiPort %>
@@ -46,4 +46,4 @@ spec:
             - name: appconfig
               mountPath: /etc/<%= apiName %>/config
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+{{ toYaml .Values.api.resources | indent 12 }}
